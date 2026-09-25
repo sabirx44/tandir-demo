@@ -121,3 +121,60 @@ html.lenis, html.lenis body { height: auto; }
 /* Placeholder until a photo exists */
 .photo-ph { position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 12px; background: repeating-linear-gradient(135deg, transparent 0 14px, rgba(243,236,223,.05) 14px 15px), var(--color-coal); font-size: 12px; color: var(--color-ash); }
 .photo-ph span { background: var(--color-soot); padding: 4px 9px; border-radius: 999px; }
+
+/* ---------- Motion kit ---------- */
+@layer components {
+  /* Button with a round icon; background fills from below and the arrow slides through */
+  .kbtn { position: relative; display: inline-flex; align-items: center; gap: 14px; height: 58px; padding-inline: 26px 7px; border-radius: 999px; overflow: hidden; isolation: isolate; font-weight: 500; font-size: 16px; white-space: nowrap; transition: color .5s var(--ease); }
+  .kbtn::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; transform: translateY(101%); transition: transform .55s var(--ease); background: var(--kbtn-fill, #fff); }
+  .kbtn:hover::before { transform: translateY(0); }
+  .kbtn .ico { position: relative; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; overflow: hidden; flex-shrink: 0; transition: background-color .5s var(--ease), color .5s var(--ease); }
+  .kbtn .ico svg { width: 16px; height: 16px; position: absolute; transition: transform .55s var(--ease); }
+  .kbtn .ico svg + svg { transform: translateX(-200%); }
+  .kbtn:hover .ico svg:first-child { transform: translateX(200%); }
+  .kbtn:hover .ico svg + svg { transform: translateX(0); }
+  html[dir="rtl"] .kbtn .ico svg { scale: -1 1; }
+  html[dir="rtl"] .kbtn .ico svg + svg { transform: translateX(200%); }
+  html[dir="rtl"] .kbtn:hover .ico svg:first-child { transform: translateX(-200%); }
+  .kbtn-ember { background: var(--color-ember); color: #fff; --kbtn-fill: var(--color-flour); }
+  .kbtn-ember:hover { color: var(--color-soot); }
+  .kbtn-ember .ico { background: var(--color-soot); color: var(--color-flour); }
+  .kbtn-ghost { box-shadow: inset 0 0 0 1px rgba(243,236,223,.35); color: var(--color-flour); --kbtn-fill: var(--color-flour); }
+  .kbtn-ghost:hover { color: var(--color-soot); }
+  .kbtn-ghost .ico { background: var(--color-flour); color: var(--color-soot); }
+  .kbtn-ghost:hover .ico { background: var(--color-ember); color: #fff; }
+  .kbtn-light { background: var(--color-flour); color: var(--color-rishtan-deep); --kbtn-fill: var(--color-crust); }
+  .kbtn-light .ico { background: var(--color-rishtan); color: #fff; }
+  .kbtn.no-ico { padding-inline: 26px; }
+  .kbtn:active { transform: scale(.97); }
+
+  /* Custom cursor */
+  .kcursor { position: fixed; left: 0; top: 0; z-index: 100; pointer-events: none; width: 0; height: 0; opacity: 0; transition: opacity .3s; }
+  .kcursor.on { opacity: 1; }
+  .kcursor-dot { position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 50%; background: var(--color-flour); mix-blend-mode: difference; transition: transform .45s var(--ease), background-color .3s; }
+  .kcursor.grow .kcursor-dot { transform: scale(3.4); }
+  .kcursor.text .kcursor-dot { transform: scale(7.5); background: var(--color-ember); mix-blend-mode: normal; }
+  .kcursor-label { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); font-size: 12px; font-weight: 600; color: #fff; white-space: nowrap; opacity: 0; transition: opacity .25s; }
+  .kcursor.text .kcursor-label { opacity: 1; }
+  html.has-cursor, html.has-cursor a, html.has-cursor button { cursor: none; }
+
+  /* Marquee */
+  .kmarquee { overflow: hidden; white-space: nowrap; }
+  .kmarquee [data-marquee-track] { display: inline-flex; will-change: transform; }
+
+  /* Scroll progress */
+  .kprogress { position: fixed; inset-inline: 0; top: 0; height: 2px; z-index: 60; transform: scaleX(0); transform-origin: left; background: var(--color-ember); }
+  html[dir="rtl"] .kprogress { transform-origin: right; }
+
+  /* Touch feedback */
+  @media (hover: none) {
+    .press:active { transform: scale(.97); transition: transform .15s; }
+  }
+}
+
+/* Preloader */
+.kpre { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; background: var(--color-soot); clip-path: inset(0 0 0 0); }
+.js .kpre { display: grid; }
+html:not(.js) .kpre { display: none; }
+.spin-slow { animation: spin 40s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .spin-slow { animation: none; } }

@@ -1,0 +1,110 @@
+---
+// Booking invitation: opens after the reservation form, styled as a stamped card
+// with a QR for the host. Can be saved as an image or added to the calendar.
+import { chekich } from './Chekich';
+import type { UI } from '../i18n/ui';
+interface Props { t: UI['book']; address: string; locale: string }
+const { t, address, locale } = Astro.props;
+---
+<dialog id="invite" class="invite" data-address={address} data-locale={locale} data-title={t.ticketTitle}>
+  <div class="invite-stage">
+    <article class="invite-card" id="invite-card">
+      <div class="invite-top">
+        <div class="flex items-center justify-between">
+          <span class="display text-[22px]">Tandir Hall</span>
+          <span class="num text-[12px] tracking-[.12em] text-flour/70" data-i="code"></span>
+        </div>
+        <div class="invite-seal" set:html={chekich({ petals: 12, stroke: 1.2 })} />
+        <p class="kicker mt-6">{t.ticketKicker}</p>
+        <h2 class="display mt-2 text-[38px]">{t.ticketTitle}</h2>
+      </div>
+      <div class="invite-edge" aria-hidden="true"></div>
+      <div class="invite-body">
+        <dl class="grid grid-cols-2 gap-x-4 gap-y-4" data-i="rows"></dl>
+        <div class="mt-6 flex items-end justify-between gap-4">
+          <p class="max-w-[17ch] text-[12px] leading-snug text-flour/60">{t.ticketNote}<br />{address}</p>
+          <img data-i="qr" alt="QR" width="104" height="104" class="size-26 rounded-lg bg-flour p-1.5" />
+        </div>
+      </div>
+    </article>
+    <div class="flex flex-wrap justify-center gap-2.5">
+      <button type="button" class="btn btn-ember" data-act="save">{t.save}</button>
+      <button type="button" class="btn btn-ghost" data-act="ics">{t.calendar}</button>
+      <button type="button" class="btn btn-ghost" data-act="close">{t.close}</button>
+    </div>
+  </div>
+</dialog>
+
+<style is:global>
+  .invite { background: transparent; border: 0; padding: 0; margin: 0; width: 100%; height: 100%; max-width: 100vw; max-height: 100dvh; color: var(--color-flour); }
+  .invite::backdrop { background: rgba(8, 5, 3, .75); backdrop-filter: blur(10px); }
+  .invite-stage { min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 24px 16px; perspective: 1400px; }
+  .invite-card { width: min(370px, 100%); border-radius: 26px; overflow: hidden; box-shadow: 0 50px 90px -30px rgba(0,0,0,.8); background: var(--color-char); }
+  .invite-top { position: relative; padding: 24px 24px 26px; background: radial-gradient(120% 90% at 100% 0%, rgba(208,86,28,.45), transparent 60%), var(--color-coal); overflow: hidden; }
+  .invite-seal { position: absolute; inset-inline-end: -40px; top: 36px; width: 170px; color: var(--color-crust); opacity: .35; }
+  .invite-edge { height: 14px; background: var(--color-rishtan); -webkit-mask: radial-gradient(circle at 7px 0, transparent 6px, #000 6.5px) 0 0 / 14px 14px repeat-x; mask: radial-gradient(circle at 7px 0, transparent 6px, #000 6.5px) 0 0 / 14px 14px repeat-x; }
+  .invite-body { padding: 22px 24px 24px; background: var(--color-rishtan); }
+  .invite-body dt { font-size: 12px; opacity: .7; }
+  .invite-body dd { margin: 2px 0 0; font-size: 16px; font-weight: 500; }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import QRCode from 'qrcode';
+  import { toPng } from 'html-to-image';
+
+  const d = document.getElementById('invite') as HTMLDialogElement | null;
+  let state: { code: string; date?: string; time?: string } | null = null;
+  const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+  const pad = (n: number) => String(n).padStart(2, '0');
+
+  function save(href: string, name: string) {
+    const a = document.createElement('a');
+    a.href = href; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  document.querySelectorAll<HTMLFormElement>('form[data-invite]').forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!d) return;
+      let ok = true;
+      form.querySelectorAll<HTMLInputElement>('[required]').forEach((f) => {
+        const bad = !f.value.trim() || (f.type === 'tel' && f.value.replace(/\D/g, '').length < 7);
+        f.setAttribute('aria-invalid', String(bad));
+        if (bad && ok) { f.focus(); ok = false; }
+      });
+      if (!ok) return;
+      const rows: string[] = [];
+      form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[data-label]').forEach((f) => {
+        let v = f instanceof HTMLSelectElement ? f.selectedOptions[0]?.textContent || f.value : f.value;
+        if (f.type === 'date' && v) v = new Date(v + 'T00:00').toLocaleDateString(d.dataset.locale, { day: 'numeric', month: 'long' });
+        if (v) rows.push(`<div><dt>${esc(f.dataset.label!)}</dt><dd>${esc(v)}</dd></div>`);
+      });
+      const code = `TH-${Math.floor(1000 + Math.random() * 9000)}`;
+      state = { code, date: (form.elements.namedItem('date') as HTMLInputElement)?.value, time: (form.elements.namedItem('time') as HTMLSelectElement)?.value };
+      d.querySelector('[data-i="code"]')!.textContent = code;
+      d.querySelector('[data-i="rows"]')!.innerHTML = rows.join('');
+      (d.querySelector('[data-i="qr"]') as HTMLImageElement).src = await QRCode.toDataURL(`${location.origin}/checkin/${code}`, { margin: 0, width: 220, color: { dark: '#110D0A', light: '#F3ECDF' } });
+      d.showModal();
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        gsap.fromTo('#invite-card', { y: 140, rotateX: 50, rotateZ: 5, opacity: 0 }, { y: 0, rotateX: 0, rotateZ: 0, opacity: 1, duration: 1.3, ease: 'expo.out' });
+        gsap.fromTo('.invite-seal', { rotate: -120, scale: 0.6 }, { rotate: 0, scale: 1, duration: 1.6, ease: 'expo.out' });
+      }
+      form.reset();
+    });
+  });
+
+  d?.addEventListener('click', async (e) => {
+    if (e.target === d) return d.close();
+    const act = (e.target as HTMLElement).closest<HTMLElement>('[data-act]')?.dataset.act;
+    if (!act || !state) return;
+    if (act === 'close') d.close();
+    if (act === 'save') save(await toPng(document.getElementById('invite-card')!, { pixelRatio: 3 }), `${state.code}.png`);
+    if (act === 'ics' && state.date) {
+      const [y, m, day] = state.date.split('-').map(Number);
+      const [hh, mm] = (state.time || '19:00').split(':').map(Number);
+      const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//esanov//tandir//RU', 'BEGIN:VEVENT', `UID:${state.code}@tandir`, `DTSTART:${y}${pad(m)}${pad(day)}T${pad(hh)}${pad(mm)}00`, 'DURATION:PT2H', `SUMMARY:Tandir Hall · ${d.dataset.title}`, `LOCATION:${d.dataset.address}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+      save(URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })), `${state.code}.ics`);
+    }
+  });
+</script>

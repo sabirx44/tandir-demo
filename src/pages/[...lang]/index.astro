@@ -1,0 +1,239 @@
+---
+import Base from '../../layouts/Base.astro';
+import Photo from '../../components/Photo.astro';
+import LangSwitch from '../../components/LangSwitch.astro';
+import Invitation from '../../components/Invitation.astro';
+import { chekich, chekichBand } from '../../components/Chekich';
+import { ui } from '../../i18n/ui';
+import { langMeta, path, staticLangPaths, type Lang } from '../../i18n/langs';
+import { categories, dishes, currency } from '../../data/menu';
+import QRCode from 'qrcode';
+
+export const getStaticPaths = staticLangPaths;
+const { lang } = Astro.props as { lang: Lang };
+const t = ui[lang];
+const cur = currency[lang];
+const fmt = (n: number) => new Intl.NumberFormat(lang === 'ar' ? 'ar' : 'ru-RU').format(n);
+const band = chekichBand();
+const arrow = '<svg class="dir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+const tableQr = await QRCode.toString(new URL(path(lang, '/menu/'), Astro.site).href + '?t=7', { type: 'svg', margin: 0, color: { dark: '#110D0A', light: '#00000000' } });
+const tabs = [{ id: 'hit', name: t.menu.hit }, ...categories.map((c) => ({ id: c.id, name: c.name[lang] }))];
+const times = ['12:00', '13:00', '14:00', '18:00', '19:00', '20:00', '21:00'];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  name: 'Tandir Hall',
+  servesCuisine: 'Uzbek',
+  telephone: t.visit.phone,
+  address: { '@type': 'PostalAddress', streetAddress: 'Shota Rustaveli 18', addressLocality: 'Tashkent', addressCountry: 'UZ' },
+  openingHours: 'Mo-Su 11:00-23:00',
+  priceRange: '$$',
+  acceptsReservations: true,
+  hasMenu: new URL(path(lang, '/menu/'), Astro.site).href,
+  inLanguage: langMeta[lang].locale,
+};
+---
+<Base lang={lang} title={t.meta.title} description={t.meta.description} schema={schema}>
+  <!-- HERO -->
+  <section class="relative flex h-[100svh] min-h-[660px] flex-col overflow-hidden" data-hero>
+    <div class="absolute inset-0" data-hero-img><Photo name="hero" alt={t.hero.title} eager position="center 55%" /></div>
+    <div class="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(17,13,10,.75),rgba(17,13,10,0)_30%,rgba(17,13,10,.3)_55%,rgba(17,13,10,.95))]"></div>
+    <div class="absolute inset-y-0 start-0 w-2/3 bg-[linear-gradient(to_right,rgba(17,13,10,.6),transparent)] rtl:bg-[linear-gradient(to_left,rgba(17,13,10,.6),transparent)]"></div>
+
+    <header class="relative z-20 mx-auto flex w-full max-w-[1440px] items-center gap-6 px-5 pt-5 md:px-10 md:pt-8">
+      <a href={path(lang)} class="me-auto flex items-center gap-3">
+        <span class="size-9 text-ember" set:html={chekich({ petals: 8, stroke: 3 })} />
+        <span class="display text-[24px] leading-none">Tandir Hall</span>
+      </a>
+      <nav class="hidden items-center gap-8 text-[15px] text-flour/80 lg:flex" aria-label={t.nav.menu}>
+        <a class="hover:text-flour" href={path(lang, '/menu/')}>{t.nav.menu}</a>
+        <a class="hover:text-flour" href="#day">{t.nav.day}</a>
+        <a class="hover:text-flour" href="#visit">{t.nav.visit}</a>
+      </nav>
+      <LangSwitch lang={lang} label={t.nav.lang} />
+      <a href="#book" class="btn btn-ember !hidden !h-10 !px-5 !text-[15px] sm:!inline-flex">{t.nav.book}</a>
+    </header>
+
+    <div class="relative z-10 mx-auto mt-5 w-full max-w-[1440px] px-5 md:px-10">
+      <p class="inline-flex items-center gap-3 rounded-full bg-soot/55 px-4 py-2 text-[14px] backdrop-blur-md">
+        <span class="pulse shrink-0"></span>
+        <span data-kazan={JSON.stringify(t.status)}>{t.status.before}</span>
+      </p>
+    </div>
+
+    <div class="relative z-10 mx-auto mt-auto grid w-full max-w-[1440px] items-end gap-10 px-5 pb-10 md:grid-cols-[1fr_auto] md:px-10 md:pb-14">
+      <div>
+        <p class="kicker" data-reveal>{t.hero.kicker}</p>
+        <h1 class="display t-mega mt-5 max-w-[10ch]" data-split>{t.hero.title}</h1>
+        <div class="mt-9 flex flex-wrap gap-3" data-reveal>
+          <a href={path(lang, '/menu/')} class="btn btn-ember">{t.hero.menu}<Fragment set:html={arrow} /></a>
+          <a href="#book" class="btn btn-ghost">{t.nav.book}</a>
+        </div>
+      </div>
+      <a href="#book" class="stamp hidden md:grid" aria-label={t.nav.book}>
+        <svg class="stamp-ring" viewBox="0 0 200 200" aria-hidden="true">
+          <defs><path id="stamp-path" d="M100,100 m-84,0 a84,84 0 1,1 168,0 a84,84 0 1,1 -168,0" /></defs>
+          <text font-size="13" letter-spacing="3" fill="currentColor" font-family="IBM Plex Sans Variable, IBM Plex Sans Arabic, sans-serif"><textPath href="#stamp-path" textLength="520" lengthAdjust="spacing">{t.hero.stamp}</textPath></text>
+        </svg>
+        <span class="core" set:html={chekich({ petals: 12, stroke: 1.6 })} />
+      </a>
+    </div>
+  </section>
+
+  <div class="band" style={`--band:${band}`} aria-hidden="true"></div>
+
+  <!-- MANIFESTO -->
+  <section class="mx-auto max-w-[1440px] px-5 py-28 md:px-10 md:py-44">
+    <p class="display t-xl max-w-[18ch] leading-[1.08]">
+      {t.manifesto.map((s) => typeof s === 'string'
+        ? <span>{s}</span>
+        : <span class="bead"><Photo name={s.img} alt="" sizes="120px" label={false} /></span>)}
+    </p>
+    <p class="kicker mt-10" data-reveal>— {t.manifestoBy}</p>
+  </section>
+
+  <!-- DAY OF THE KAZAN -->
+  <section id="day" class="relative overflow-hidden border-y border-line bg-char md:h-[100svh]" data-hscroll>
+    <div class="mx-auto flex max-w-[1440px] items-end justify-between gap-6 px-5 pt-20 md:px-10 md:pt-16">
+      <h2 class="display t-l" data-split>{t.day.title}</h2>
+      <div class="hidden h-px w-48 origin-[left] bg-line md:block rtl:origin-[right]"><div class="h-px w-full origin-[inherit] bg-crust" data-progress></div></div>
+    </div>
+    <div class="flex flex-col gap-14 px-5 py-14 md:flex-row md:gap-8 md:px-10 md:py-12" data-track>
+      {t.day.steps.map((s) => (
+        <article class="shrink-0 md:w-[min(62vw,720px)]">
+          <div class="relative aspect-[16/10] overflow-hidden rounded-[22px] bg-coal md:h-[48svh] md:w-full md:aspect-auto" data-zoom>
+            <Photo name={s.img} alt={s.title} sizes="(min-width: 900px) 62vw, 100vw" />
+          </div>
+          <div class="mt-6 grid grid-cols-[auto_1fr] items-baseline gap-x-6">
+            <span class="display num text-[clamp(40px,4vw,64px)] leading-none text-crust" dir="ltr">{s.time}</span>
+            <div>
+              <h3 class="display t-m">{s.title}</h3>
+              <p class="mt-1 max-w-[40ch] text-flour/70">{s.text}</p>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section id="menu" class="mx-auto max-w-[1440px] px-5 py-24 md:px-10 md:py-36">
+    <div class="flex flex-wrap items-end justify-between gap-8">
+      <div>
+        <h2 class="display t-xl" data-split>{t.menu.title}</h2>
+        <p class="mt-5 max-w-[42ch] text-flour/70" data-reveal>{t.menu.intro}</p>
+      </div>
+      <a href={path(lang, '/menu/')} class="btn btn-ghost" data-reveal>{t.menu.all}<Fragment set:html={arrow} /></a>
+    </div>
+    <div class="mt-12 flex gap-2 overflow-x-auto pb-2" role="tablist" data-reveal>
+      {tabs.map((c, i) => (
+        <button type="button" role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-tab={c.id} class="menu-tab shrink-0 rounded-full border border-line px-5 py-2.5 text-[15px]">{c.name}</button>
+      ))}
+    </div>
+    <div class="mt-8 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+      {dishes.map((d) => (
+        <article class:list={['menu-card group', !d.hit && 'hidden']} data-cat={d.cat} data-hit={d.hit ? '' : undefined}>
+          <div class="relative aspect-[4/5] overflow-hidden rounded-[22px] bg-coal">
+            <Photo name={d.id} alt={d.name[lang]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw" class="transition-transform duration-[1.2s] ease-[var(--ease)] group-hover:scale-[1.06]" />
+            {d.hit && <span class="absolute start-4 top-4 rounded-full bg-soot/70 px-3 py-1.5 text-[13px] text-crust backdrop-blur-md">{t.menu.hit}</span>}
+            {d.soldOut && <span class="absolute inset-0 grid place-items-center bg-soot/60 text-[15px] font-medium">{t.menu.sold}</span>}
+          </div>
+          <div class="mt-5 flex items-start justify-between gap-4">
+            <div>
+              <h3 class="display t-m">{d.name[lang]}</h3>
+              <p class="mt-1.5 text-[15px] text-flour/60">{d.desc[lang]}</p>
+            </div>
+            <p class="num shrink-0 pt-1 text-[17px] text-crust">{fmt(d.price)} <span class="text-[13px] text-ash">{cur}</span></p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- QR MENU: Rishtan cobalt band -->
+  <section class="relative overflow-hidden bg-rishtan">
+    <div class="pointer-events-none absolute -end-40 -top-40 w-[560px] text-flour/10" set:html={chekich({ petals: 16, stroke: 0.6 })} />
+    <div class="relative mx-auto grid max-w-[1440px] items-center gap-14 px-5 py-24 md:grid-cols-[1.1fr_0.9fr] md:px-10 md:py-32">
+      <div>
+        <p class="kicker !text-flour/80" data-reveal>{t.qr.kicker}</p>
+        <h2 class="display t-xl mt-4" data-split>{t.qr.title}</h2>
+        <p class="mt-6 max-w-[44ch] text-[18px] text-flour/85" data-reveal>{t.qr.text}</p>
+        <div class="mt-9 flex flex-wrap gap-3" data-reveal>
+          <a href={`${path(lang, '/menu/')}?t=7`} class="btn bg-flour text-rishtan-deep hover:bg-crust">{t.qr.try}<Fragment set:html={arrow} /></a>
+          <a href={path(lang, '/tables/')} class="btn btn-ghost">{t.qr.cards}</a>
+        </div>
+      </div>
+      <div class="relative mx-auto h-[560px] w-full max-w-[420px]" data-reveal>
+        <div class="table-card absolute start-0 top-16 w-[190px] rotate-[-8deg] rtl:rotate-[8deg]">
+          <span class="size-8 text-soot" set:html={chekich({ petals: 8, stroke: 3 })} />
+          <p class="display mt-3 text-[20px] leading-none text-soot">Tandir Hall</p>
+          <div class="table-qr mt-4 rounded-xl bg-flour p-3" set:html={tableQr} />
+          <p class="mt-3 max-w-[9ch] text-[12px] leading-tight text-soot/80">{t.tables.card}</p>
+          <p class="display num mt-1 text-[30px] leading-none text-soot" dir="ltr">07</p>
+        </div>
+        <div class="absolute end-0 top-0 w-[250px] rounded-[40px] border-[7px] border-soot bg-soot shadow-[0_50px_90px_-30px_rgba(0,0,0,.7)]">
+          <iframe src={`${path(lang, '/menu/')}?t=7`} title={t.qr.title} class="block h-[520px] w-full rounded-[33px] bg-char" loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOK -->
+  <section id="book" class="mx-auto grid max-w-[1440px] gap-12 px-5 py-24 md:grid-cols-[0.9fr_1.1fr] md:px-10 md:py-36">
+    <div>
+      <h2 class="display t-xl" data-split>{t.book.title}</h2>
+      <p class="mt-5 max-w-[36ch] text-flour/70" data-reveal>{t.book.note}</p>
+      <div class="relative mt-10 hidden aspect-[4/3] overflow-hidden rounded-[22px] md:block" data-zoom><Photo name="hall" alt="" sizes="40vw" /></div>
+    </div>
+    <form class="self-start rounded-[28px] border border-line bg-char p-6 md:p-9" data-invite novalidate data-reveal>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="grid gap-2 text-[14px] text-flour/70">{t.book.name}<input class="input" name="name" autocomplete="name" required data-label={t.book.guest} /></label>
+        <label class="grid gap-2 text-[14px] text-flour/70">{t.book.phone}<input class="input" name="phone" type="tel" autocomplete="tel" required dir="ltr" /></label>
+        <label class="grid gap-2 text-[14px] text-flour/70">{t.book.guests}<select class="input" name="guests" data-label={t.book.guests}>{[2, 3, 4, 5, 6, 8, 10, 12].map((n) => <option>{n}</option>)}</select></label>
+        <label class="grid gap-2 text-[14px] text-flour/70">{t.book.date}<input class="input" name="date" type="date" required data-label={t.book.date} /></label>
+        <label class="grid gap-2 text-[14px] text-flour/70 sm:col-span-2">{t.book.time}
+          <select class="input num" name="time" data-label={t.book.time}>{times.map((x) => <option>{x}</option>)}</select>
+        </label>
+      </div>
+      <button type="submit" class="btn btn-ember mt-7 w-full">{t.book.submit}<Fragment set:html={arrow} /></button>
+    </form>
+  </section>
+
+  <div class="band" style={`--band:${band}`} aria-hidden="true"></div>
+
+  <!-- VISIT -->
+  <footer id="visit" class="mx-auto max-w-[1440px] px-5 pb-10 pt-24 md:px-10 md:pt-32">
+    <div class="flex flex-wrap items-end justify-between gap-10">
+      <h2 class="display t-mega" data-split>{t.visit.title}</h2>
+      <span class="w-40 text-ember md:w-56" set:html={chekich({ petals: 16, stroke: 1 })} />
+    </div>
+    <dl class="mt-16 grid gap-8 border-t border-line pt-10 sm:grid-cols-2 lg:grid-cols-4">
+      <div><dt class="kicker">{t.visit.addressLabel}</dt><dd class="mt-2">{t.visit.address}<br /><a class="mt-1 inline-block text-crust underline-offset-4 hover:underline" href="https://yandex.uz/maps/10335/tashkent/" target="_blank" rel="noopener">{t.visit.route}</a></dd></div>
+      <div><dt class="kicker">{t.visit.hoursLabel}</dt><dd class="mt-2">{t.visit.hours}</dd></div>
+      <div><dt class="kicker">{t.visit.phoneLabel}</dt><dd class="num mt-2" dir="ltr">{t.visit.phone}</dd></div>
+      <div><dt class="kicker">{t.visit.now}</dt><dd class="num mt-2" data-clock="Asia/Tashkent"></dd></div>
+    </dl>
+    <p class="mt-16 text-[12px] text-ash">{t.footer}</p>
+  </footer>
+
+  <Invitation t={t.book} address={t.visit.address} locale={langMeta[lang].locale} />
+</Base>
+
+<style>
+  .menu-tab[aria-selected="true"] { background: var(--color-flour); color: var(--color-soot); border-color: var(--color-flour); }
+  .table-card { background: var(--color-crust); border-radius: 20px; padding: 18px; box-shadow: 0 30px 60px -25px rgba(0,0,0,.6); }
+  .table-qr :global(svg) { display: block; width: 100%; height: auto; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('[data-tab]').forEach((x) => x.setAttribute('aria-selected', String(x === tab)));
+      document.querySelectorAll<HTMLElement>('.menu-card').forEach((c) => c.classList.toggle('hidden', tab.dataset.tab === 'hit' ? !c.hasAttribute('data-hit') : c.dataset.cat !== tab.dataset.tab));
+      import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => ScrollTrigger.refresh());
+    });
+  });
+  const date = document.querySelector<HTMLInputElement>('input[type="date"]');
+  if (date) date.min = new Date().toISOString().slice(0, 10);
+</script>

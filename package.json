@@ -1,0 +1,28 @@
+{
+  "name": "tandir",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --port 4340",
+    "build": "astro build",
+    "preview": "astro preview --port 4340"
+  },
+  "dependencies": {
+    "@fontsource-variable/ibm-plex-sans": "^5.3.0",
+    "@fontsource/el-messiri": "^5.3.0",
+    "@fontsource/ibm-plex-sans-arabic": "^5.3.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.3.5",
+    "gsap": "^3.15.0",
+    "html-to-image": "^1.11.13",
+    "lenis": "^1.3.26",
+    "qrcode": "^1.5.4",
+    "tailwindcss": "^4.3.3"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  },
+  "devDependencies": {
+    "puppeteer-core": "^25.12.0"
+  }
+}

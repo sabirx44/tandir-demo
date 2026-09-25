@@ -1,0 +1,194 @@
+---
+// QR menu: opened by scanning the card on a table (?t=7). One static page per language.
+import Base from '../../layouts/Base.astro';
+import Photo from '../../components/Photo.astro';
+import LangSwitch from '../../components/LangSwitch.astro';
+import { chekich } from '../../components/Chekich';
+import { ui } from '../../i18n/ui';
+import { path, staticLangPaths, type Lang } from '../../i18n/langs';
+import { categories, dishes, currency } from '../../data/menu';
+
+export const getStaticPaths = staticLangPaths;
+const { lang } = Astro.props as { lang: Lang };
+const t = ui[lang];
+const a = t.app;
+const fmt = (n: number) => new Intl.NumberFormat(lang === 'ar' ? 'ar' : 'ru-RU').format(n);
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Menu',
+  name: `Tandir Hall — ${t.menu.title}`,
+  inLanguage: lang,
+  hasMenuSection: categories.map((c) => ({
+    '@type': 'MenuSection',
+    name: c.name[lang],
+    hasMenuItem: dishes.filter((d) => d.cat === c.id).map((d) => ({ '@type': 'MenuItem', name: d.name[lang], description: d.desc[lang], offers: { '@type': 'Offer', price: d.price, priceCurrency: 'UZS' } })),
+  })),
+};
+---
+<Base lang={lang} title={`${t.menu.title} — Tandir Hall`} description={t.menu.intro} page="/menu/" schema={schema} smooth={false}>
+  <div class="mx-auto min-h-svh max-w-[560px] bg-char pb-44" data-app data-currency={currency[lang]} data-labels={JSON.stringify({ ...a, tableWord: a.table })}>
+    <header class="sticky top-0 z-30 bg-char/95 backdrop-blur-xl">
+      <div class="flex items-center gap-3 px-4 pb-3 pt-4">
+        <a href={path(lang)} class="me-auto flex items-center gap-2.5">
+          <span class="size-7 text-ember" set:html={chekich({ petals: 8, stroke: 3 })} />
+          <span class="display text-[20px] leading-none">Tandir Hall</span>
+        </a>
+        <span class="rounded-full bg-coal px-3 py-2 text-[13px]" id="table-chip" hidden>{a.table} <b class="num" id="table-num"></b></span>
+        <LangSwitch lang={lang} page="/menu/" label={t.nav.lang} class="keep-query" />
+      </div>
+      <nav class="cats flex gap-2 overflow-x-auto px-4 pb-3" aria-label={t.menu.title}>
+        {categories.map((c, i) => <a href={`#c-${c.id}`} class:list={['cat shrink-0 rounded-full px-4 py-2 text-[14px]', i === 0 && 'on']}>{c.name[lang]}</a>)}
+      </nav>
+    </header>
+
+    <div class="relative mx-4 mt-2 aspect-[16/9] overflow-hidden rounded-[20px]">
+      <Photo name="hero" alt="" sizes="560px" label={false} />
+      <div class="absolute inset-0 bg-[linear-gradient(to_top,rgba(17,13,10,.9),transparent_60%)]"></div>
+      <p class="absolute inset-x-4 bottom-3 text-[14px] text-flour/85" data-kazan={JSON.stringify(t.status)}>{t.status.before}</p>
+    </div>
+
+    {categories.map((c) => (
+      <section id={`c-${c.id}`} class="scroll-mt-32 px-4 pt-8" data-sec>
+        <h2 class="display mb-2 text-[30px]">{c.name[lang]}</h2>
+        <ul class="divide-y divide-line">
+          {dishes.filter((d) => d.cat === c.id).map((d) => (
+            <li class:list={['flex gap-4 py-4', d.soldOut && 'opacity-40']} data-id={d.id} data-price={d.price} data-name={d.name[lang]} data-name-ru={d.name.ru}>
+              <div class="relative size-[96px] shrink-0 overflow-hidden rounded-2xl bg-coal"><Photo name={d.id} alt={d.name[lang]} sizes="110px" label={false} /></div>
+              <div class="flex min-w-0 flex-1 flex-col">
+                <h3 class="text-[17px] font-medium leading-tight">{d.name[lang]}</h3>
+                <p class="mt-1 text-[13px] leading-snug text-flour/55">{d.desc[lang]}</p>
+                <div class="mt-auto flex items-center justify-between pt-2">
+                  <span class="num text-[15px] text-crust">{fmt(d.price)} <span class="text-[12px] text-ash">{currency[lang]}</span></span>
+                  {d.soldOut ? <span class="text-[13px] text-ash">{t.menu.sold}</span> : (
+                    <div class="flex items-center gap-1.5">
+                      <button type="button" class="size-9 rounded-full bg-coal text-[18px]" data-dec hidden aria-label="−">−</button>
+                      <span class="num w-5 text-center text-[15px]" data-qty hidden>0</span>
+                      <button type="button" class="size-9 rounded-full bg-ember text-[20px] leading-none text-white" data-inc aria-label={a.add}>+</button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+
+    <div class="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-[560px] bg-gradient-to-t from-char via-char/95 to-transparent px-3 pb-[calc(12px+env(safe-area-inset-bottom))] pt-6">
+      <button type="button" id="cart" class="mb-2 flex w-full items-center justify-between rounded-full bg-ember px-6 py-4 text-white" hidden>
+        <span>{a.order} · <span class="num" id="count">0</span> {a.items}</span>
+        <span class="num font-medium"><span id="sum">0</span> {currency[lang]}</span>
+      </button>
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" class="rounded-full border border-line py-3.5 text-[14px]" data-call="waiter">{a.waiter}</button>
+        <button type="button" class="rounded-full border border-line py-3.5 text-[14px]" data-call="bill">{a.bill}</button>
+      </div>
+    </div>
+
+    <dialog id="sheet" class="sheet">
+      <div class="mx-auto max-w-[560px] rounded-t-[28px] bg-coal p-5 pb-8 text-flour">
+        <div class="mx-auto mb-5 h-1 w-10 rounded-full bg-line"></div>
+        <div id="s-order">
+          <h2 class="display text-[28px]">{a.order}</h2>
+          <ul id="s-items" class="mt-3 divide-y divide-line text-[15px]"></ul>
+          <p class="mt-3 flex justify-between border-t border-line pt-4 text-[17px] font-medium"><span>{a.total}</span><span class="num"><span id="s-sum"></span> {currency[lang]}</span></p>
+          <button type="button" id="send" class="btn btn-ember mt-5 w-full">{a.send}</button>
+        </div>
+        <div id="s-done" hidden>
+          <span class="mb-4 block size-12 text-ember" set:html={chekich({ petals: 12, stroke: 1.6 })} />
+          <h2 id="d-title" class="display text-[28px]"></h2>
+          <p id="d-text" class="mt-1 text-flour/65"></p>
+          <p class="mt-6 text-[13px] text-flour/70">{a.demo}</p>
+          <pre id="tg" class="mt-2 whitespace-pre-wrap rounded-2xl bg-[#E1EBF1] p-4 font-sans text-[14px] leading-relaxed text-[#111]" dir="auto"></pre>
+          <button type="button" class="btn btn-ghost mt-5 w-full" data-close>{a.close}</button>
+        </div>
+      </div>
+    </dialog>
+  </div>
+</Base>
+
+<style is:global>
+  .cats { scrollbar-width: none; }
+  .cat { background: var(--color-coal); color: var(--color-flour); opacity: .7; }
+  .cat.on { background: var(--color-flour); color: var(--color-soot); opacity: 1; }
+  .sheet { margin: auto 0 0; width: 100%; max-width: 100%; padding: 0; border: 0; background: transparent; }
+  .sheet::backdrop { background: rgba(8,5,3,.7); }
+  .sheet[open] > div { animation: up .45s cubic-bezier(.22,1,.36,1); }
+  @keyframes up { from { transform: translateY(100%); } }
+</style>
+
+<script>
+  const app = document.querySelector<HTMLElement>('[data-app]')!;
+  const L = JSON.parse(app.dataset.labels!);
+  const cur = app.dataset.currency!;
+  const table = new URLSearchParams(location.search).get('t');
+  if (table) {
+    document.getElementById('table-num')!.textContent = table;
+    document.getElementById('table-chip')!.hidden = false;
+    document.querySelectorAll<HTMLAnchorElement>('.keep-query a').forEach((a) => (a.href += `?t=${encodeURIComponent(table)}`));
+  }
+  const fmt = (n: number) => new Intl.NumberFormat(document.documentElement.lang === 'ar' ? 'ar' : 'ru-RU').format(n);
+  const now = () => new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+
+  const cats = document.querySelectorAll<HTMLAnchorElement>('.cat');
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    cats.forEach((c) => { const on = c.hash === `#${e.target.id}`; c.classList.toggle('on', on); if (on) c.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); });
+  }), { rootMargin: '-35% 0px -60% 0px' });
+  document.querySelectorAll('[data-sec]').forEach((s) => io.observe(s));
+
+  const cart = new Map<string, number>();
+  const row = (id: string) => document.querySelector<HTMLElement>(`[data-id="${id}"]`)!;
+  const totals = () => { let c = 0, s = 0; cart.forEach((q, id) => { c += q; s += q * Number(row(id).dataset.price); }); return { c, s }; };
+  function render() {
+    const { c, s } = totals();
+    document.getElementById('cart')!.hidden = c === 0;
+    document.getElementById('count')!.textContent = String(c);
+    document.getElementById('sum')!.textContent = fmt(s);
+    document.querySelectorAll<HTMLElement>('[data-id]').forEach((li) => {
+      const q = cart.get(li.dataset.id!) || 0;
+      const qty = li.querySelector<HTMLElement>('[data-qty]'); const dec = li.querySelector<HTMLElement>('[data-dec]');
+      if (qty && dec) { qty.textContent = String(q); qty.hidden = dec.hidden = q === 0; }
+    });
+  }
+  document.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement; const li = t.closest<HTMLElement>('[data-id]');
+    if (!li) return;
+    const id = li.dataset.id!;
+    if (t.closest('[data-inc]')) cart.set(id, (cart.get(id) || 0) + 1);
+    if (t.closest('[data-dec]')) { const q = (cart.get(id) || 0) - 1; q > 0 ? cart.set(id, q) : cart.delete(id); }
+    render();
+  });
+
+  const sheet = document.getElementById('sheet') as HTMLDialogElement;
+  const done = (title: string, text: string, msg: string) => {
+    document.getElementById('s-order')!.hidden = true;
+    document.getElementById('s-done')!.hidden = false;
+    document.getElementById('d-title')!.textContent = title;
+    document.getElementById('d-text')!.textContent = text;
+    document.getElementById('tg')!.textContent = msg;
+    if (!sheet.open) sheet.showModal();
+  };
+  document.getElementById('cart')!.addEventListener('click', () => {
+    const items: string[] = [];
+    cart.forEach((q, id) => items.push(`<li class="flex justify-between py-2.5"><span>${row(id).dataset.name} × ${q}</span><span class="num">${fmt(q * Number(row(id).dataset.price))}</span></li>`));
+    document.getElementById('s-items')!.innerHTML = items.join('');
+    document.getElementById('s-sum')!.textContent = fmt(totals().s);
+    document.getElementById('s-order')!.hidden = false;
+    document.getElementById('s-done')!.hidden = true;
+    sheet.showModal();
+  });
+  // The kitchen always receives the order in Russian, whatever language the guest used.
+  document.getElementById('send')!.addEventListener('click', () => {
+    const lines: string[] = [];
+    cart.forEach((q, id) => lines.push(`• ${row(id).dataset.nameRu} × ${q}`));
+    done(L.sent, L.sentText, `🍽 Заказ · стол ${table || '—'} · язык гостя: ${document.documentElement.lang.toUpperCase()}\n\n${lines.join('\n')}\n\nИтого: ${new Intl.NumberFormat('ru-RU').format(totals().s)} сум\n${now()}`);
+    cart.clear(); render();
+  });
+  document.querySelectorAll<HTMLElement>('[data-call]').forEach((b) => b.addEventListener('click', () => {
+    const bill = b.dataset.call === 'bill';
+    done(L.waiterSent, '', `${bill ? '🧾 Счёт' : '🙋 Официант'} · стол ${table || '—'}\n${now()}`);
+  }));
+  sheet.addEventListener('click', (e) => { if (e.target === sheet || (e.target as HTMLElement).closest('[data-close]')) sheet.close(); });
+  void cur;
+</script>

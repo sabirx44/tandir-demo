@@ -1,0 +1,123 @@
+/*
+  Tandir Hall identity.
+  World: the kazan fire at dawn, the non-bread stamp (chekich), Rishtan cobalt ceramics.
+  Soot background, ember as the one action color, cobalt only where ceramics appear.
+*/
+@import "tailwindcss";
+@import "@fontsource/el-messiri/400.css";
+@import "@fontsource/el-messiri/500.css";
+@import "@fontsource/el-messiri/600.css";
+@import "@fontsource/el-messiri/700.css";
+@import "@fontsource-variable/ibm-plex-sans/wdth.css";
+@import "@fontsource/ibm-plex-sans-arabic/400.css";
+@import "@fontsource/ibm-plex-sans-arabic/500.css";
+@import "@fontsource/ibm-plex-sans-arabic/600.css";
+
+@theme {
+  --color-soot: #110D0A;
+  --color-char: #1A1410;
+  --color-coal: #241C16;
+  --color-ember: #D0561C;
+  --color-ember-deep: #A8410F;
+  --color-rishtan: #2A4BB5;
+  --color-rishtan-deep: #17307F;
+  --color-crust: #E6C58A;
+  --color-flour: #F3ECDF;
+  --color-ash: #8E8174;
+  --color-line: rgba(243, 236, 223, 0.12);
+  --font-display: "El Messiri", "IBM Plex Sans Variable", Georgia, serif;
+  --font-sans: "IBM Plex Sans Variable", "IBM Plex Sans Arabic", system-ui, sans-serif;
+}
+
+:root { color-scheme: dark; --ease: cubic-bezier(0.22, 1, 0.36, 1); }
+/* El Messiri lacks some Kazakh letters; Kazakh pages set display text in condensed Plex */
+html[lang="kk"] { --font-display: "IBM Plex Sans Variable", system-ui, sans-serif; }
+html[lang="kk"] .display { font-stretch: 82%; font-weight: 600; letter-spacing: -0.03em; }
+html[dir="rtl"] { --font-sans: "IBM Plex Sans Arabic", "IBM Plex Sans Variable", system-ui, sans-serif; }
+
+@layer base {
+  html { background: var(--color-soot); color: var(--color-flour); -webkit-font-smoothing: antialiased; }
+  body { font-family: var(--font-sans); font-size: 17px; line-height: 1.6; }
+  h1, h2, h3 { text-wrap: balance; }
+  :focus-visible { outline: 2px solid var(--color-crust); outline-offset: 3px; border-radius: 4px; }
+  ::selection { background: var(--color-ember); color: #fff; }
+  img { display: block; max-width: 100%; }
+}
+
+@layer components {
+.display { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.01em; line-height: 0.95; }
+.t-mega { font-size: clamp(56px, 10vw, 168px); line-height: 0.88; }
+.t-xl   { font-size: clamp(40px, 6vw, 96px); }
+.t-l    { font-size: clamp(30px, 3.8vw, 56px); }
+.t-m    { font-size: clamp(22px, 2vw, 30px); line-height: 1.15; }
+.kicker { font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-crust); }
+html[dir="rtl"] .kicker { letter-spacing: 0; font-size: 14px; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  height: 54px; padding: 0 26px; border-radius: 999px; font-weight: 500; font-size: 16px; white-space: nowrap;
+  transition: background-color .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
+}
+.btn-ember { background: var(--color-ember); color: #fff; }
+.btn-ember:hover { background: var(--color-ember-deep); }
+.btn-ghost { border: 1px solid rgba(243,236,223,.3); color: var(--color-flour); }
+.btn-ghost:hover { border-color: var(--color-flour); }
+.btn svg { width: 16px; height: 16px; }
+html[dir="rtl"] .btn svg.dir { transform: scaleX(-1); }
+
+/* Ornament band: repeating chekich stamps, used as a section divider */
+.band {
+  height: 26px; opacity: .5;
+  background-image: var(--band);
+  background-size: 26px 26px; background-repeat: repeat-x; background-position: center;
+}
+
+/* Inline photo "beads" inside the manifesto sentence */
+.bead {
+  display: inline-block; width: 1.5em; height: 0.95em; border-radius: 999px; overflow: hidden;
+  vertical-align: -0.08em; margin-inline: 0.12em; position: relative;
+}
+.bead img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Status pill */
+.pulse { position: relative; width: 8px; height: 8px; border-radius: 50%; background: var(--color-ember); }
+.pulse::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 1px solid var(--color-ember); animation: pulse 2s var(--ease) infinite; }
+@keyframes pulse { from { transform: scale(.6); opacity: 1; } to { transform: scale(1.8); opacity: 0; } }
+
+/* Stamp button: rotating ring of text around a chekich rosette */
+.stamp { position: relative; display: grid; place-items: center; width: var(--s, 168px); aspect-ratio: 1; border-radius: 50%; color: var(--color-flour); }
+.stamp .stamp-ring { position: absolute; inset: 0; animation: spin 24s linear infinite; }
+.stamp .core { width: 58%; height: 58%; color: var(--color-ember); transition: transform .8s var(--ease); }
+.stamp:hover .core { transform: rotate(45deg) scale(1.05); }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Inputs */
+.input {
+  height: 56px; width: 100%; padding-inline: 20px; border-radius: 14px; font: inherit; font-size: 16px;
+  background: rgba(243,236,223,.05); border: 1px solid var(--color-line); color: var(--color-flour); appearance: none;
+  transition: border-color .2s;
+}
+.input::placeholder { color: var(--color-ash); }
+.input:focus { outline: none; border-color: var(--color-crust); }
+.input[aria-invalid="true"] { border-color: var(--color-ember); }
+select.input option { color: #111; }
+input[type="date"].input::-webkit-calendar-picker-indicator { filter: invert(1); opacity: .6; }
+
+}
+
+/* Motion hooks */
+.js [data-reveal] { opacity: 0; transform: translateY(30px); }
+.js [data-split] { visibility: hidden; }
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] { opacity: 1; transform: none; }
+  .js [data-split] { visibility: visible; }
+  .stamp .stamp-ring, .pulse::after { animation: none; }
+}
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+/* Placeholder until a photo exists */
+.photo-ph { position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 12px; background: repeating-linear-gradient(135deg, transparent 0 14px, rgba(243,236,223,.05) 14px 15px), var(--color-coal); font-size: 12px; color: var(--color-ash); }
+.photo-ph span { background: var(--color-soot); padding: 4px 9px; border-radius: 999px; }

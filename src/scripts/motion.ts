@@ -8,6 +8,8 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 
 // ?qa disables motion so full-page review screenshots show every section at rest
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches || new URLSearchParams(location.search).has('qa');
+// Without motion the day timeline cannot be scrolled by pinning, so it becomes a swipeable row
+if (reduced) document.querySelector('[data-hscroll]')?.classList.add('hscroll-static');
 const rtl = document.documentElement.dir === 'rtl';
 
 const preDelay = !reduced && document.querySelector('[data-preloader]') ? 1.6 : 0;

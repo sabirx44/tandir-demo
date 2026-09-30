@@ -125,7 +125,7 @@ html.lenis, html.lenis body { height: auto; }
 /* ---------- Motion kit ---------- */
 @layer components {
   /* Button with a round icon; background fills from below and the arrow slides through */
-  .kbtn { position: relative; display: inline-flex; align-items: center; gap: 14px; height: 58px; padding-inline: 26px 7px; border-radius: 999px; overflow: hidden; isolation: isolate; font-weight: 500; font-size: 16px; white-space: nowrap; transition: color .5s var(--ease); }
+  .kbtn { position: relative; display: inline-flex; align-items: center; gap: 14px; min-height: 58px; max-width: 100%; min-width: 0; padding-block: 6px; padding-inline: 26px 7px; border-radius: 999px; overflow: hidden; isolation: isolate; font-weight: 500; font-size: 16px; white-space: normal; line-height: 1.15; text-align: start; transition: color .5s var(--ease); }
   .kbtn::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; transform: translateY(101%); transition: transform .55s var(--ease); background: var(--kbtn-fill, #fff); }
   .kbtn:hover::before { transform: translateY(0); }
   .kbtn .ico { position: relative; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; overflow: hidden; flex-shrink: 0; transition: background-color .5s var(--ease), color .5s var(--ease); }
@@ -178,3 +178,14 @@ html.lenis, html.lenis body { height: auto; }
 html:not(.js) .kpre { display: none; }
 .spin-slow { animation: spin 40s linear infinite; }
 @media (prefers-reduced-motion: reduce) { .spin-slow { animation: none; } }
+
+/* Day timeline without motion: a swipeable row instead of the pinned scroll */
+.hscroll-static { height: auto !important; }
+.hscroll-static [data-track] { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.hscroll-static [data-track] > * { scroll-snap-align: start; }
+
+/* A button label may shrink and wrap next to its icon instead of pushing out of the button */
+.kbtn > span:not(.ico) { min-width: 0; }
+
+/* Hover scaling inside the day row must never widen the page */
+html, body { overflow-x: clip; }

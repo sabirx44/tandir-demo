@@ -111,15 +111,15 @@ const schema = {
   </div>
 
   <!-- DAY OF THE KAZAN -->
-  <section id="day" class="relative overflow-hidden border-y border-line bg-char md:h-[100svh]" data-hscroll>
+  <section id="day" class="relative overflow-hidden [overflow:clip] border-y border-line bg-char min-[900px]:h-[100svh]" data-hscroll>
     <div class="mx-auto flex max-w-[1440px] items-end justify-between gap-6 px-5 pt-20 md:px-10 md:pt-16">
       <h2 class="display t-l" data-split>{t.day.title}</h2>
       <div class="hidden h-px w-48 origin-[left] bg-line md:block rtl:origin-[right]"><div class="h-px w-full origin-[inherit] bg-crust" data-progress></div></div>
     </div>
-    <div class="flex flex-col gap-14 px-5 py-14 md:flex-row md:gap-8 md:px-10 md:py-12" data-track>
+    <div class="flex flex-col gap-14 px-5 py-14 md:px-10 min-[900px]:flex-row min-[900px]:gap-8 min-[900px]:py-12" data-track>
       {t.day.steps.map((s) => (
-        <article class="shrink-0 md:w-[min(62vw,720px)]">
-          <div class="relative aspect-[16/10] overflow-hidden rounded-[22px] bg-coal md:h-[48svh] md:w-full md:aspect-auto" data-zoom data-wipe>
+        <article class="shrink-0 min-[900px]:w-[min(62vw,720px)]">
+          <div class="relative aspect-[16/10] overflow-hidden rounded-[22px] bg-coal min-[900px]:h-[48svh] min-[900px]:w-full min-[900px]:aspect-auto" data-zoom data-wipe>
             <Photo name={s.img} alt={s.title} sizes="(min-width: 900px) 62vw, 100vw" />
           </div>
           <div class="mt-6 grid grid-cols-[auto_1fr] items-baseline gap-x-6">
@@ -169,9 +169,9 @@ const schema = {
   </section>
 
   <!-- QR MENU: Rishtan cobalt band -->
-  <section class="relative overflow-hidden bg-rishtan">
+  <section class="relative overflow-hidden [overflow:clip] bg-rishtan">
     <div class="pointer-events-none absolute -end-40 -top-40 w-[560px] text-flour/10" set:html={chekich({ petals: 16, stroke: 0.6 })} />
-    <div class="relative mx-auto grid max-w-[1440px] items-center gap-14 px-5 py-24 md:grid-cols-[1.1fr_0.9fr] md:px-10 md:py-32">
+    <div class="relative mx-auto grid max-w-[1440px] items-center gap-14 px-5 py-24 md:grid-cols-[1.1fr_0.9fr] md:px-10 md:py-32 [&>*]:min-w-0">
       <div>
         <p class="kicker !text-flour/80" data-reveal>{t.qr.kicker}</p>
         <h2 class="display t-xl mt-4" data-split>{t.qr.title}</h2>

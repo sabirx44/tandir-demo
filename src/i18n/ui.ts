@@ -29,7 +29,7 @@ const ru = {
     save: 'Сохранить', calendar: 'В календарь', close: 'Готово',
   },
   visit: { title: 'Приходите', address: 'Ташкент, ул. Шота Руставели, 18', hours: 'Ежедневно 11:00–23:00', phone: '+998 90 000 00 00', addressLabel: 'Адрес', hoursLabel: 'Часы', phoneLabel: 'Бронь', now: 'Сейчас в Ташкенте', route: 'Маршрут в Яндекс Картах' },
-  footer: 'Демо-проект Esanov. Ресторан, шеф и цены вымышлены, фото сгенерированы.',
+  footer: 'Демо-проект SABR. Ресторан, шеф и цены вымышлены, фото: авторы Pexels и ИИ.',
   app: { table: 'Стол', add: 'Добавить', order: 'Заказ', items: 'блюд', send: 'Отправить на кухню', waiter: 'Позвать официанта', bill: 'Попросить счёт', sent: 'Заказ на кухне', sentText: 'Официант подтвердит его в течение пары минут.', waiterSent: 'Официант идёт к вашему столу', total: 'Итого', close: 'Закрыть', demo: 'Так сообщение приходит на кухню в Telegram:' },
   tables: { title: 'Карточки для столов', text: '12 карточек A6, по четыре на лист A4. Каждый QR открывает меню своего стола.', print: 'Печать', card: 'Меню и заказ с телефона', scan: 'Наведите камеру на код' },
 };
@@ -62,7 +62,7 @@ const uz: UI = {
     save: 'Saqlash', calendar: 'Kalendarga', close: 'Tayyor',
   },
   visit: { title: 'Kelib turing', address: 'Toshkent, Shota Rustaveli ko‘chasi, 18', hours: 'Har kuni 11:00–23:00', phone: '+998 90 000 00 00', addressLabel: 'Manzil', hoursLabel: 'Ish vaqti', phoneLabel: 'Band qilish', now: 'Hozir Toshkentda', route: 'Yandex Xaritada yo‘nalish' },
-  footer: 'Esanov demo loyihasi. Restoran, oshpaz va narxlar to‘qima, rasmlar sunʼiy yaratilgan.',
+  footer: 'SABR demo loyihasi. Restoran, oshpaz va narxlar to‘qima, rasmlar: Pexels mualliflari va SI.',
   app: { table: 'Stol', add: 'Qo‘shish', order: 'Buyurtma', items: 'ta taom', send: 'Oshxonaga yuborish', waiter: 'Ofitsiantni chaqirish', bill: 'Hisobni so‘rash', sent: 'Buyurtma oshxonada', sentText: 'Ofitsiant bir necha daqiqada tasdiqlaydi.', waiterSent: 'Ofitsiant stolingizga kelmoqda', total: 'Jami', close: 'Yopish', demo: 'Xabar oshxonaga Telegramda shunday keladi:' },
   tables: { title: 'Stol kartochkalari', text: '12 ta A6 kartochka, A4 varaqda to‘rttadan. Har bir QR o‘z stolining menyusini ochadi.', print: 'Chop etish', card: 'Menyu va buyurtma telefondan', scan: 'Kamerani kodga qarating' },
 };
@@ -93,7 +93,7 @@ const kk: UI = {
     save: 'Сақтау', calendar: 'Күнтізбеге', close: 'Дайын',
   },
   visit: { title: 'Келіңіздер', address: 'Ташкент, Шота Руставели көшесі, 18', hours: 'Күн сайын 11:00–23:00', phone: '+998 90 000 00 00', addressLabel: 'Мекенжай', hoursLabel: 'Жұмыс уақыты', phoneLabel: 'Брондау', now: 'Қазір Ташкентте', route: 'Яндекс Картадағы бағыт' },
-  footer: 'Esanov демо жобасы. Мейрамхана, аспаз және бағалар ойдан алынған, суреттер жасанды түрде жасалған.',
+  footer: 'SABR демо жобасы. Мейрамхана, аспаз және бағалар ойдан алынған, суреттер: Pexels авторлары және ЖИ.',
   app: { table: 'Үстел', add: 'Қосу', order: 'Тапсырыс', items: 'тағам', send: 'Асханаға жіберу', waiter: 'Даяшыны шақыру', bill: 'Есепшот сұрау', sent: 'Тапсырыс асханада', sentText: 'Даяшы бірнеше минутта растайды.', waiterSent: 'Даяшы үстеліңізге келе жатыр', total: 'Барлығы', close: 'Жабу', demo: 'Хабар асханаға Telegram-да осылай келеді:' },
   tables: { title: 'Үстел карточкалары', text: '12 A6 карточка, A4 парағында төрттен. Әр QR өз үстелінің мәзірін ашады.', print: 'Басып шығару', card: 'Мәзір мен тапсырыс телефоннан', scan: 'Камераны кодқа бағыттаңыз' },
 };
@@ -124,7 +124,7 @@ const en: UI = {
     save: 'Save', calendar: 'Add to calendar', close: 'Done',
   },
   visit: { title: 'Come by', address: 'Tashkent, 18 Shota Rustaveli St', hours: 'Every day 11:00–23:00', phone: '+998 90 000 00 00', addressLabel: 'Address', hoursLabel: 'Hours', phoneLabel: 'Bookings', now: 'Now in Tashkent', route: 'Directions in Yandex Maps' },
-  footer: 'Esanov demo project. The restaurant, chef and prices are fictional; photos are generated.',
+  footer: 'SABR demo project. The restaurant, chef and prices are fictional; photos by Pexels contributors and AI.',
   app: { table: 'Table', add: 'Add', order: 'Order', items: 'items', send: 'Send to kitchen', waiter: 'Call a waiter', bill: 'Ask for the bill', sent: 'Your order is in the kitchen', sentText: 'A waiter will confirm it in a couple of minutes.', waiterSent: 'A waiter is on the way', total: 'Total', close: 'Close', demo: 'This is how the kitchen receives it in Telegram:' },
   tables: { title: 'Table cards', text: '12 A6 cards, four per A4 sheet. Each QR opens the menu for its table.', print: 'Print', card: 'Menu and ordering from your phone', scan: 'Point your camera at the code' },
 };
@@ -155,7 +155,7 @@ const ar: UI = {
     save: 'حفظ', calendar: 'إضافة إلى التقويم', close: 'تم',
   },
   visit: { title: 'تفضلوا بزيارتنا', address: 'طشقند، شارع شوتا روستافيلي 18', hours: 'يوميًا 11:00–23:00', phone: '+998 90 000 00 00', addressLabel: 'العنوان', hoursLabel: 'ساعات العمل', phoneLabel: 'الحجز', now: 'الآن في طشقند', route: 'الاتجاهات في خرائط ياندكس' },
-  footer: 'مشروع تجريبي من Esanov. المطعم والطاهي والأسعار خيالية، والصور مولّدة.',
+  footer: 'مشروع تجريبي من SABR. المطعم والطاهي والأسعار خيالية، والصور من Pexels والذكاء الاصطناعي.',
   app: { table: 'الطاولة', add: 'إضافة', order: 'الطلب', items: 'أطباق', send: 'إرسال إلى المطبخ', waiter: 'استدعاء النادل', bill: 'طلب الحساب', sent: 'طلبك في المطبخ', sentText: 'سيؤكده النادل خلال دقيقتين.', waiterSent: 'النادل في طريقه إليك', total: 'المجموع', close: 'إغلاق', demo: 'هكذا تصل الرسالة إلى المطبخ عبر تيليجرام:' },
   tables: { title: 'بطاقات الطاولات', text: '12 بطاقة بحجم A6، أربع في كل ورقة A4. كل رمز QR يفتح قائمة طاولته.', print: 'طباعة', card: 'القائمة والطلب من هاتفك', scan: 'وجّه الكاميرا إلى الرمز' },
 };

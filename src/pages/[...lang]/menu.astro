@@ -133,7 +133,7 @@ const schema = {
   const cats = document.querySelectorAll<HTMLAnchorElement>('.cat');
   const io = new IntersectionObserver((es) => es.forEach((e) => {
     if (!e.isIntersecting) return;
-    cats.forEach((c) => { const on = c.hash === `#${e.target.id}`; c.classList.toggle('on', on); if (on) c.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); });
+    cats.forEach((c) => { const on = c.hash === `#${e.target.id}`; c.classList.toggle('on', on); if (on) { const bar = c.parentElement!; bar.scrollTo({ left: c.offsetLeft - (bar.clientWidth - c.offsetWidth) / 2, behavior: 'smooth' }); } }); // scroll only the tab bar: scrollIntoView would also scroll the page that embeds this menu
   }), { rootMargin: '-35% 0px -60% 0px' });
   document.querySelectorAll('[data-sec]').forEach((s) => io.observe(s));
 

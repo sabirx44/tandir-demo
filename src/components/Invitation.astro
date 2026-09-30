@@ -103,7 +103,7 @@ const { t, address, locale } = Astro.props;
     if (act === 'ics' && state.date) {
       const [y, m, day] = state.date.split('-').map(Number);
       const [hh, mm] = (state.time || '19:00').split(':').map(Number);
-      const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//esanov//tandir//RU', 'BEGIN:VEVENT', `UID:${state.code}@tandir`, `DTSTART:${y}${pad(m)}${pad(day)}T${pad(hh)}${pad(mm)}00`, 'DURATION:PT2H', `SUMMARY:Tandir Hall · ${d.dataset.title}`, `LOCATION:${d.dataset.address}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+      const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//sabr//tandir//RU', 'BEGIN:VEVENT', `UID:${state.code}@tandir`, `DTSTART:${y}${pad(m)}${pad(day)}T${pad(hh)}${pad(mm)}00`, 'DURATION:PT2H', `SUMMARY:Tandir Hall · ${d.dataset.title}`, `LOCATION:${d.dataset.address}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
       save(URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })), `${state.code}.ics`);
     }
   });

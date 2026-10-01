@@ -7,6 +7,7 @@ export const categories: { id: string; name: T }[] = [
   { id: 'plov', name: { ru: 'Плов', uz: 'Palov', kk: 'Палау', en: 'Plov', ar: 'البلوف' } },
   { id: 'grill', name: { ru: 'С углей', uz: 'Cho‘g‘da', kk: 'Шоқта', en: 'From the coals', ar: 'على الفحم' } },
   { id: 'tandir', name: { ru: 'Из тандыра', uz: 'Tandirdan', kk: 'Тандырдан', en: 'From the tandir', ar: 'من التنور' } },
+  { id: 'lagman', name: { ru: 'Лагман', uz: 'Lag‘mon', kk: 'Лағман', en: 'Lagman', ar: 'لاغمان' } },
   { id: 'salads', name: { ru: 'Салаты', uz: 'Salatlar', kk: 'Салаттар', en: 'Salads', ar: 'السلطات' } },
   { id: 'drinks', name: { ru: 'Напитки', uz: 'Ichimliklar', kk: 'Сусындар', en: 'Drinks', ar: 'المشروبات' } },
 ];
@@ -53,9 +54,9 @@ export const dishes: Dish[] = [
     desc: { ru: 'Томаты, лук, острый перец, базилик', uz: 'Pomidor, piyoz, achchiq qalampir, rayhon', kk: 'Қызанақ, пияз, ащы бұрыш, райхан', en: 'Tomato, onion, hot pepper, basil', ar: 'طماطم، بصل، فلفل حار، ريحان' },
   },
   {
-    id: 'salad-toshkent', cat: 'salads', price: 28000,
-    name: { ru: 'Салат «Ташкент»', uz: '“Toshkent” salati', kk: '«Ташкент» салаты', en: 'Tashkent salad', ar: 'سلطة طشقند' },
-    desc: { ru: 'Зелёная редька, говядина, яйцо, жареный лук', uz: 'Ko‘k turp, mol go‘shti, tuxum, qovurilgan piyoz', kk: 'Көк шалғам, сиыр еті, жұмыртқа, қуырылған пияз', en: 'Green radish, beef, egg, fried onion', ar: 'فجل أخضر، لحم بقر، بيض، بصل مقلي' },
+    id: 'lagman', cat: 'lagman', price: 32000,
+    name: { ru: 'Лагман', uz: 'Lag‘mon', kk: 'Лағман', en: 'Lagman', ar: 'لاغمان' },
+    desc: { ru: 'Тянутая вручную лапша, говядина, перец и овощи в бульоне', uz: 'Qo‘lda cho‘zilgan lag‘mon, mol go‘shti, qalampir va sabzavot', kk: 'Қолмен созылған кеспе, сиыр еті, бұрыш пен көкөніс', en: 'Hand-pulled noodles, beef, peppers and vegetables in broth', ar: 'معكرونة مسحوبة يدوياً مع لحم بقري وفلفل وخضار في المرق' },
   },
   {
     id: 'drink-tea', cat: 'drinks', price: 12000,

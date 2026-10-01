@@ -96,7 +96,7 @@ const schema = {
 
   <!-- MANIFESTO -->
   <section class="mx-auto max-w-[1440px] px-5 py-28 md:px-10 md:py-44">
-    <p class="display t-xl max-w-[18ch] leading-[1.08]">
+    <p class="display t-xl max-w-[18ch] leading-[1.08] rtl:leading-[1.5]">
       {t.manifesto.map((s) => typeof s === 'string'
         ? <span>{s}</span>
         : <span class="bead"><Photo name={s.img} alt="" sizes="120px" label={false} /></span>)}
@@ -116,7 +116,7 @@ const schema = {
       <h2 class="display t-l" data-split>{t.day.title}</h2>
       <div class="hidden h-px w-48 origin-[left] bg-line md:block rtl:origin-[right]"><div class="h-px w-full origin-[inherit] bg-crust" data-progress></div></div>
     </div>
-    <div class="flex flex-col gap-14 px-5 py-14 md:px-10 min-[900px]:flex-row min-[900px]:gap-8 min-[900px]:py-12" data-track>
+    <div class="flex flex-col gap-14 px-5 py-14 md:px-10 min-[900px]:flex-row min-[900px]:gap-8 min-[900px]:py-12" data-track data-scroller>
       {t.day.steps.map((s) => (
         <article class="shrink-0 min-[900px]:w-[min(62vw,720px)]">
           <div class="relative aspect-[16/10] overflow-hidden rounded-[22px] bg-coal min-[900px]:h-[48svh] min-[900px]:w-full min-[900px]:aspect-auto" data-zoom data-wipe>
@@ -204,7 +204,7 @@ const schema = {
       <div class="relative mt-10 hidden aspect-[4/3] overflow-hidden rounded-[22px] md:block" data-zoom data-wipe><Photo name="hall" alt="" sizes="40vw" /></div>
     </div>
     <form class="self-start rounded-[28px] border border-line bg-char p-6 md:p-9" data-invite novalidate data-reveal>
-      <div class="grid gap-4 sm:grid-cols-2">
+      <div class="grid gap-4 sm:grid-cols-2 [&>*]:min-w-0">
         <label class="grid gap-2 text-[14px] text-flour/70">{t.book.name}<input class="input" name="name" autocomplete="name" required data-label={t.book.guest} /></label>
         <label class="grid gap-2 text-[14px] text-flour/70">{t.book.phone}<input class="input" name="phone" type="tel" autocomplete="tel" required dir="ltr" /></label>
         <label class="grid gap-2 text-[14px] text-flour/70">{t.book.guests}<select class="input" name="guests" data-label={t.book.guests}>{[2, 3, 4, 5, 6, 8, 10, 12].map((n) => <option>{n}</option>)}</select></label>

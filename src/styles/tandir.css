@@ -151,10 +151,10 @@ html.lenis, html.lenis body { height: auto; }
   /* Custom cursor */
   .kcursor { position: fixed; left: 0; top: 0; z-index: 100; pointer-events: none; width: 0; height: 0; opacity: 0; transition: opacity .3s; }
   .kcursor.on { opacity: 1; }
-  .kcursor-dot { position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 50%; background: var(--color-flour); mix-blend-mode: difference; transition: transform .45s var(--ease), background-color .3s; }
-  .kcursor.grow .kcursor-dot { transform: scale(3.4); }
-  .kcursor.text .kcursor-dot { transform: scale(7.5); background: var(--color-ember); mix-blend-mode: normal; }
-  .kcursor-label { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); font-size: 12px; font-weight: 600; color: #fff; white-space: nowrap; opacity: 0; transition: opacity .25s; }
+  .kcursor-dot { position: absolute; left: 0; top: 0; width: var(--d, 12px); height: var(--d, 12px); transform: translate(-50%, -50%); border-radius: 999px; background: var(--color-flour); mix-blend-mode: difference; transition: width .45s var(--ease), height .45s var(--ease), border-radius .45s var(--ease), transform .45s var(--ease), background-color .3s; }
+  .kcursor.grow .kcursor-dot { --d: 41px; }
+  .kcursor.text .kcursor-dot { width: var(--lw, 88px); height: 42px; background: var(--color-ember); mix-blend-mode: normal; }
+  .kcursor-label { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); z-index: 1; font-size: 12px; font-weight: 600; color: #fff; white-space: nowrap; opacity: 0; transition: opacity .25s; }
   .kcursor.text .kcursor-label { opacity: 1; }
   html.has-cursor, html.has-cursor a, html.has-cursor button { cursor: none; }
 
@@ -189,3 +189,26 @@ html:not(.js) .kpre { display: none; }
 
 /* Hover scaling inside the day row must never widen the page */
 html, body { overflow-x: clip; }
+
+:root { --dd-bg: var(--color-coal); --dd-fg: var(--color-flour); --dd-hover: rgba(243,236,223,.07); --dd-accent: var(--color-crust); --dd-line: var(--color-line); --dd-shadow: 0 24px 60px -20px rgba(0,0,0,.8); }
+@layer components {
+  /* Designed dropdowns (tools/kit/dropdown.ts). Site colours come from the --dd-* variables above. */
+  .dd-btn { display: inline-flex; align-items: center; justify-content: space-between; gap: .5em; text-align: start; cursor: pointer; }
+  .dd-btn .dd-val { min-width: 0; overflow-wrap: anywhere; line-height: 1.2; }
+  .dd-btn.dd-placeholder .dd-val { opacity: .7; }
+  .dd-chev { width: 14px; height: 14px; flex: none; opacity: .75; transition: transform .3s cubic-bezier(.22, 1, .36, 1); }
+  .dd-btn[aria-expanded="true"] .dd-chev { transform: rotate(180deg); }
+  .dd-list { position: fixed; z-index: 200; margin: 0; padding: 6px; list-style: none; overflow: auto; overscroll-behavior: contain; background: var(--dd-bg); color: var(--dd-fg); border-radius: var(--dd-radius, 16px); border: 1px solid var(--dd-line); box-shadow: var(--dd-shadow); opacity: 0; transform: translateY(-6px) scale(.98); transform-origin: top center; transition: opacity .18s ease, transform .24s cubic-bezier(.22, 1, .36, 1); scrollbar-width: thin; }
+  .dd-list.dd-up { transform: translateY(6px) scale(.98); transform-origin: bottom center; }
+  .dd-list.dd-open { opacity: 1; transform: none; }
+  .dd-opt { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 44px; padding: 8px 12px; border-radius: calc(var(--dd-radius, 16px) - 6px); font-size: 15px; font-weight: 600; line-height: 1.25; cursor: pointer; outline: none; transition: background-color .15s; }
+  .dd-opt:hover, .dd-opt:focus-visible, .dd-opt:focus { background: var(--dd-hover); }
+  .dd-opt[aria-selected="true"] { color: var(--dd-accent); }
+  .dd-tick { width: 16px; height: 16px; flex: none; opacity: 0; }
+  .dd-opt[aria-selected="true"] .dd-tick { opacity: 1; }
+  .dd-opt[aria-disabled="true"] { opacity: .4; cursor: default; }
+  @media (prefers-reduced-motion: reduce) { .dd-list { transition: none; } }
+}
+/* A centred button keeps a wrapped label centred too */
+.kbtn.no-ico { text-align: center; }
+.input { min-width: 0; max-width: 100%; }

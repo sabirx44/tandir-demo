@@ -3,6 +3,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import Lenis from 'lenis';
 import { initKit } from './kit';
+import { initDropdowns } from './dropdown';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -13,6 +14,7 @@ if (reduced) document.querySelector('[data-hscroll]')?.classList.add('hscroll-st
 const rtl = document.documentElement.dir === 'rtl';
 
 const preDelay = !reduced && document.querySelector('[data-preloader]') ? 1.6 : 0;
+initDropdowns();
 initKit({ reduced });
 
 if (reduced) {
@@ -37,10 +39,12 @@ if (reduced) {
     // Headlines rise line by line. Arabic is split by words only to keep letters joined.
     document.querySelectorAll<HTMLElement>('[data-split]').forEach((el) => {
       const split = SplitText.create(el, { type: rtl ? 'words,lines' : 'lines', mask: 'lines' });
+      // Room for ascenders and descenders inside each line mask, so display type is never shaved
+      split.masks.forEach((m) => { m.style.paddingBlock = '0.14em'; m.style.marginBlock = '-0.14em'; });
       gsap.set(el, { visibility: 'visible' });
       const hero = el.closest('[data-hero]');
       gsap.from(split.lines, {
-        yPercent: 105, duration: 1.2, ease: 'power4.out', stagger: 0.09, delay: hero ? 0.25 + preDelay : 0,
+        yPercent: 105, duration: 1.2, ease: 'power4.out', stagger: 0.09, onComplete: () => split.revert(), delay: hero ? 0.25 + preDelay : 0,
         scrollTrigger: hero ? undefined : { trigger: el, start: 'top 85%', once: true },
       });
     });

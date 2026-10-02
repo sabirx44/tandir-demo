@@ -19,7 +19,7 @@ Demo site for a fictional Uzbek restaurant in Tashkent: a website plus the syste
 
 Astro · TypeScript · Tailwind CSS · GSAP · Lenis · Cloudflare Pages
 
-Built with an AI-assisted workflow; every page passes an automated layout audit (Puppeteer) at five screen widths and in every language before deploy.
+Every page passes an automated layout audit (Puppeteer) at five screen widths and in every language before deploy.
 
 ## Run
 
